@@ -3,8 +3,6 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
- // Load .env from parent directory
-
 // Import routes
 const blogRoutes = require('./routes/blogRoutes');
 
@@ -12,14 +10,15 @@ const blogRoutes = require('./routes/blogRoutes');
 const app = express();
 
 // Middleware
-app.use(cors()); // Enable CORS for all routes
-app.use(express.json()); // Parse JSON bodies
+app.use(cors());
+app.use(express.json());
 
-// Port configuration
-const PORT = process.env.PORT || 5000;
+// Port configuration (Railway provides PORT automatically)
+const PORT = process.env.PORT || 8080;
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URI)
+// MongoDB Connection (✅ MATCHES Railway variable)
+mongoose
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('✅ Connected to MongoDB Atlas successfully');
   })
@@ -31,9 +30,9 @@ mongoose.connect(process.env.MONGO_URI)
 // Routes
 app.use('/api/blogs', blogRoutes);
 
-// Basic route for testing
+// Test route
 app.get('/', (req, res) => {
-  res.json({ 
+  res.json({
     message: 'Blog App API is running!',
     endpoints: {
       getAllBlogs: 'GET /api/blogs',
@@ -45,7 +44,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// Error handling middleware
+// Error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Something went wrong!' });
@@ -54,5 +53,4 @@ app.use((err, req, res, next) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on port ${PORT}`);
-  console.log(`📝 API Documentation: http://localhost:${PORT}`);
 });
