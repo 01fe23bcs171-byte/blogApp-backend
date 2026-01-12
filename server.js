@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-require('dotenv').config({ path: '../.env' }); // Load .env from parent directory
+require('dotenv').config();
+ // Load .env from parent directory
 
 // Import routes
 const blogRoutes = require('./routes/blogRoutes');
